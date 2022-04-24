@@ -1,0 +1,56 @@
+<h1>Games#index</h1>
+<p>Find me in app/views/games/index.html.erb</p>
+
+
+
+<div id='map'></div>
+
+<script>
+
+mapboxgl.accessToken = ;
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v10',
+  center: [-96, 37.8],
+  zoom: 3
+});
+
+
+
+// code from the next step will go here!
+var url = "/get_games"
+
+if (window.location.href.includes("?")) {
+  var date = window.location.href.split("=")[1].split("-")
+  var month = date[0]
+  var day = date[1]
+  url += "?date=" + month + "-" + day
+}
+
+axios.get(url).then(response => {
+  var geojson = {
+    type: 'FeatureCollection',
+    features: response.data
+  };
+
+  geojson.features.forEach(function(marker) {
+
+    // create a HTML element for each feature
+    var el = document.createElement('div');
+    el.className = 'marker';
+
+    // make a marker for each feature and add to the map
+
+    new mapboxgl.Marker(el)
+      .setLngLat(marker.geometry.coordinates)
+      .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+      .addTo(map);
+  });
+
+})
+
+
+
+</script>

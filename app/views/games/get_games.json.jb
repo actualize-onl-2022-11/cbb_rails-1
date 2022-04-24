@@ -1,0 +1,13 @@
+@games.map do |game|
+  {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [game.lon, game.lat]
+    },
+    properties: {
+      title: 'Mapbox',
+      description: "<b>#{game.away}</b> at <b>#{game.home}<b> in #{game.venue} <br> #{game.scheduled}"
+    }
+  }
+end
